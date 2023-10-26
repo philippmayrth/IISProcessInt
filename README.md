@@ -30,6 +30,8 @@ Formulate hyothesis about each why cluster and include all relevant evidence tha
 
 Tipp: Try to formulate hypothesis in a way that they can be tested easily like "If X then Y" in this example easy boolean logic can be applied.
 
+<!--
+
 ### ✅ / ⛔️ / ❓ Hypothesis 1
 
 Status: Accepted / Rejected / Insufficient Evidence to Accept or Reject
@@ -42,7 +44,64 @@ Sometimes mapping the hypothesis in an argument map like this can help applying 
 
 ![](build/Hypothesis_1.svg)
 
+-->
 
+Note:
+- Pizza received is only tracked for Orders originating from the website
+
+### ⛔️ Hypothesis A10: Customers get the wrong Pizza delivered
+Reject because All orders are being payed.
+
+Assumption: Customer get the wrong Pizza if:
+- We have to Bake a new Pizza after a Pizza was already dispatched to a customer.
+- The customer does not pay after receiving the Pizza.
+
+Results from Data:
+- All orders originating from the website are being payed long before they are being dispatched
+- Orders at the counter are not being dispatched
+- All orders by phone are being payed towards the end of the process wether they are being dispatched or not
+
+Source: PMTK Sunburst chart filted by each order method. Eyballing the parts of the ring that have on of the payment activities in it.
+
+### ⛔️ Hypothesis A20: Customers live too far away for the route to be profitable
+Reject because the mean throughput time between "Departure pizza" and "Pizza arrives at customer" has a median of 5m.
+
+- Assumption: If it takes longer to deliver a Pizza to a customer that means a customer lives further away
+- Assumption: Delivery within 15km is reasonable.
+- Assumption: It takes 20 minutes to drive to a customer 15km away.
+- Assumtpion: Every delivery that takes longer than 20 minutes is too far away to be profitable.
+
+![](PMTKScreenshots/HA20/Filter.png)
+
+![](PMTKScreenshots/HA20/Boxplot.png)
+
+
+### ⛔️ Hypothesis A30: The route is not profitable because it's inefficient (eg. by not having enough customers along the route)
+Rejected because as A20 found customers get their deliveries within 5m which means planning a route would provide us with neglectable results.
+
+Assumption: It is inefficient if:
+- The planning route was left out
+- Planning happened after the Pizza already departed
+
+
+### Hypothesis B10: The kitchen is overloaded with work
+Assumption: The kitchen is overloaded if not all Pizza orders are being finished
+
+
+### Hypothesis B20: The ingredients for ordered Pizzas are not available
+
+
+### Hypothesis B30: The service is bad (either incompetent or rude)
+
+
+### ⛔️ Hypothesis B40: Customers receive the wrong Pizza
+Rejected because A10 was rejected which had the same basis
+
+
+### Hypothesis B50: The customer has to wait too long for the Pizza
+
+
+<!--
 # How?
 
 Brainstorm ideas on how to solve the problem in a mind map here.
@@ -60,3 +119,4 @@ Now strategice / Plan any actions that are woth taking as outlined in the how pa
 
 Sometimes not all viable options can be taken at the same time use Network diagrams or Weighted Sum Analysis to make a decition on which to take.
 
+-->
