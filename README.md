@@ -98,7 +98,21 @@ Assumption: The kitchen is overloaded if not all Pizza orders are being finished
 Rejected because A10 was rejected which had the same basis
 
 
-### Hypothesis B50: The customer has to wait too long for the Pizza
+### ✅ Hypothesis B50: The customer has to wait too long for the Pizza
+Accept because if a customer orders by website or phone they wait around an hour which is too long.
+
+- All events throughput time median: 43m.
+- Order at counter: **12m** (Filtered by start event "order at counter")
+- Order from website:  **54m** (Filtered by start event "start order website")
+- Order by phone (picked up and delivered): **48m** (Filtered by start event "order by phone")
+
+![](PMTKScreenshots/HB50/FilteredByStartOrderWebsite.png)
+Throughput time for orders originating from website
+
+
+![](PMTKScreenshots/HB50/FilteredByStartOrderPhone.png)
+Throughput time for orders originating from phone
+
 
 
 <!--
