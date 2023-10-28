@@ -85,13 +85,14 @@ Assumption: It is inefficient if:
 
 
 ### Hypothesis B10: The kitchen is overloaded with work
-Assumption: The kitchen is overloaded if not all Pizza orders are being finished
+Assumption: The kitchen is overloaded if not all Pizza orders are being finished.
 
 
 ### Hypothesis B20: The ingredients for ordered Pizzas are not available
 
 
-### Hypothesis B30: The service is bad (either incompetent or rude)
+### ❓ Hypothesis B30: The service is bad (either incompetent or rude)
+Unaware of how the event log would help to test this hypothesis. Maybe testing out the service "undercover" would be a suitable test.
 
 
 ### ⛔️ Hypothesis B40: Customers receive the wrong Pizza
