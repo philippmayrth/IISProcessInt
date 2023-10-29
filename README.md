@@ -123,11 +123,18 @@ filtered 3to5 stars
 filtered 0to3 stars
 
 
-
-
-
 ### ⛔️ Hypothesis AB10: The case attributes (customer location, customer type, pizza type, pizza size, ...) have a direct influence on rating or revenue
 Reject: Tested with HypothesisNotebooks/HA10.ipynb using a random forrest algo trained by using the attributes as features. Each feature has a neglectable influence on the output.
+
+
+### Hypothesis AB20: The variant key in the attributes referes to different ways the process can be run through
+select count(*)
+from Pizza_Event e
+left join Pizza_Case c on e._CASE_KEY = c._CASE_KEY
+where Variant = 5
+order by sorting
+Returns 0
+
 
 
 
