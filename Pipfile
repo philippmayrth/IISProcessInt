@@ -7,6 +7,7 @@ name = "pypi"
 pandas = "*"
 scikit-learn = "*"
 pandoc = "*"
+pm4py = "*"
 
 [dev-packages]
 ipykernel = "*"
