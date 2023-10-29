@@ -115,6 +115,17 @@ Throughput time for orders originating from website
 Throughput time for orders originating from phone
 
 
+This can also be seen when splitting the dataset into satisfied customers (3-5 stars) and unsatisfied customers (0-3 stars).
+![](PMTKScreenshots/HB50/Filtered3to5stars.png)
+filtered 3to5 stars
+
+![](PMTKScreenshots/HB50/Filtered0to3stars.png)
+filtered 0to3 stars
+
+
+
+
+
 ### ⛔️ Hypothesis AB10: The case attributes (customer location, customer type, pizza type, pizza size, ...) have a direct influence on rating or revenue
 Reject: Tested with HypothesisNotebooks/HA10.ipynb using a random forrest algo trained by using the attributes as features. Each feature has a neglectable influence on the output.
 
