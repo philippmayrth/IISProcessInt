@@ -115,6 +115,10 @@ Throughput time for orders originating from website
 Throughput time for orders originating from phone
 
 
+### ⛔️ Hypothesis AB10: The case attributes (customer location, customer type, pizza type, pizza size, ...) have a direct influence on rating or revenue
+Reject: Tested with HypothesisNotebooks/HA10.ipynb using a random forrest algo trained by using the attributes as features. Each feature has a neglectable influence on the output.
+
+
 
 <!--
 # How?
