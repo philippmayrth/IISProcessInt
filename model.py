@@ -44,23 +44,43 @@ def algo(df, column: str):
 
     # Evaluate the performance of the classifier on the testing data
     score = clf.score(X_test, y_test)
-    print('Accuracy:', score)
-    # recall
 
+    # recall
     y_pred = clf.predict(X_test)
     recall = recall_score(y_test, y_pred, average='macro')
-    print('Recall:', recall)
 
     # precision
     precision = precision_score(y_test, y_pred, average='macro')
-    print('Precision:', precision)
 
 
     print()
     # Print the feature importances
     importances = clf.feature_importances_
+    featureImportances = []
     for feature, importance in zip(X.columns, importances):
-        print(feature, importance)
+        featureImportances.append({"feature": feature, "importance": importance})
+    return {
+        "accuracy": score,
+        "recall": recall,
+        "precision": precision,
+        "column": column,
+        "feature_importances": featureImportances,
+    }
+
+
+def algoPrinter(algoResult: Dict):
+    print("===")
+    print(f"Accuracy: {algoResult['accuracy']}")
+    print(f"Recall: {algoResult['recall']}")
+    print(f"Precision: {algoResult['precision']}")
+    print("----")
+    print(f"Column: {algoResult['column']}")
+    print("----")
+    print("Feature Importances:")
+    for i in algoResult["feature_importances"]:
+        print(f"{i['feature']}: {i['importance']}")
+    print("===")
+    print()
 
 
 
@@ -103,7 +123,7 @@ def prepareData(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, sql: str) -> None:
+def predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, sql: str) -> Dict:
     df = pd.read_sql(sql, con)
     df = prepareData(df)
     # Drop Revenue and Costs because that would train the model to give us a non useful result
@@ -112,12 +132,15 @@ def predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, sql: str) ->
     dfPredictPrfitablity.drop("Profit", axis=1, inplace=True)
     dfPredictPrfitablity.drop("Costs", axis=1, inplace=True)
     dfPredictPrfitablity.drop("Revenue", axis=1, inplace=True)
-    algo(dfPredictPrfitablity, "IsOrderProfitable")
-
+    proitability = algo(dfPredictPrfitablity, "IsOrderProfitable")
 
     dfPredictCustomerSatisfaction = df.copy()
     dfPredictCustomerSatisfaction["IsCustomerSatisfied"] = dfPredictCustomerSatisfaction["CustomerSatisfaction"] >= 3
-    algo(dfPredictCustomerSatisfaction, "CustomerSatisfaction")
+    satisfaction = algo(dfPredictCustomerSatisfaction, "CustomerSatisfaction")
+    return {
+        "profitability": proitability,
+        "satisfaction": satisfaction,
+    }
 
 
 if __name__ == "__main__":
@@ -126,5 +149,9 @@ if __name__ == "__main__":
         # Prevent creating an empty db
         raise Exception("Database does not exist")
     con = sqlite3.connect(path)
-    predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, "SELECT * FROM Pizza_Case WHERE Variant != 5")
+    res = predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, "SELECT * FROM Pizza_Case WHERE Variant != 5")
+    for i in res:
+        algoPrinter(res[i])
+        print()
+        print()
 
