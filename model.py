@@ -11,7 +11,7 @@ from pm4py.algo.discovery.alpha import algorithm as alpha_miner
 
 
 # Enhance dataframe with start and end activities
-def getActivityByOrderingTimestamp(caseId, order: str) -> Optional[str]:
+def getActivityByOrderingTimestamp(con, caseId, order: str) -> Optional[str]:
     cursor = con.cursor()
     cursor.execute(f"select ACTIVITY_EN from Pizza_Event where _case_key = ? order by eventtime {order} limit 1", (caseId, ))
     res = cursor.fetchone()
@@ -21,12 +21,12 @@ def getActivityByOrderingTimestamp(caseId, order: str) -> Optional[str]:
     return res[0]
 
 
-def getStartActivity(caseId) -> Optional[str]:
-    return getActivityByOrderingTimestamp(caseId, "asc")
+def getStartActivity(con, caseId) -> Optional[str]:
+    return getActivityByOrderingTimestamp(con, caseId, "asc")
 
 
-def getEndActivity(caseId) -> Optional[str]:
-    return getActivityByOrderingTimestamp(caseId, "desc")
+def getEndActivity(con, caseId) -> Optional[str]:
+    return getActivityByOrderingTimestamp(con, caseId, "desc")
 
 
 def algo(df, column: str):
@@ -84,7 +84,7 @@ def algoPrinter(algoResult: Dict):
 
 
 
-def prepareData(df: pd.DataFrame) -> pd.DataFrame:
+def prepareData(con, df: pd.DataFrame) -> pd.DataFrame:
     df.drop("Customer_ID", axis=1, inplace=True)
 
     df = pd.get_dummies(df, columns=["CustomerType", "CustomerLocation", "DistributionChannel", "Weekday", "CostFactor", "PizzaSize", "PizzaType"])
@@ -113,8 +113,8 @@ def prepareData(df: pd.DataFrame) -> pd.DataFrame:
     pm4py.stats.get_case_duration(log, case_id="895")
 
     df["Duration"] = df["_CASE_KEY"].map(lambda x: pm4py.stats.get_case_duration(log, case_id=str(x)))
-    df["StartActivity"] = df["_CASE_KEY"].map(getStartActivity)
-    df["EndActivity"] = df["_CASE_KEY"].map(getEndActivity)
+    df["StartActivity"] = df["_CASE_KEY"].map(lambda caseId : getStartActivity(con, caseId))
+    df["EndActivity"] = df["_CASE_KEY"].map(lambda caseId : getEndActivity(con, caseId))
     df.drop("_CASE_KEY", axis=1, inplace=True)
 
     # convert startactity with one hot encoding
@@ -125,7 +125,7 @@ def prepareData(df: pd.DataFrame) -> pd.DataFrame:
 
 def predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, sql: str) -> Dict:
     df = pd.read_sql(sql, con)
-    df = prepareData(df)
+    df = prepareData(con, df)
     # Drop Revenue and Costs because that would train the model to give us a non useful result
     dfPredictPrfitablity = df.copy()
 
@@ -148,8 +148,8 @@ if __name__ == "__main__":
     if not path.exists():
         # Prevent creating an empty db
         raise Exception("Database does not exist")
-    con = sqlite3.connect(path)
-    res = predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, "SELECT * FROM Pizza_Case WHERE Variant != 5")
+    _con = sqlite3.connect(path)
+    res = predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(_con, "SELECT * FROM Pizza_Case WHERE Variant != 5")
     for i in res:
         algoPrinter(res[i])
         print()
