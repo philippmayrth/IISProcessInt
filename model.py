@@ -88,7 +88,7 @@ def prepareData(df: pd.DataFrame) -> pd.DataFrame:
     net, initial_marking, final_marking = alpha_miner.apply(log)
 
     process_model = pm4py.discover_bpmn_inductive(log)
-    pm4py.view_bpmn(process_model)
+    # pm4py.view_bpmn(process_model)
 
     pm4py.stats.get_case_duration(log, case_id="895")
 
@@ -103,15 +103,8 @@ def prepareData(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-if __name__ == "__main__":
-    dbPath = Path("../data/data.sqlite")
-    if not dbPath.exists():
-        # Avoid creating an empty database
-        raise Exception("Database file does not exist")
-    con = sqlite3.connect(dbPath)
-    
-
-    df = pd.read_sql("SELECT * FROM Pizza_Case WHERE Variant != 5", con)
+def predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, sql: str) -> None:
+    df = pd.read_sql(sql, con)
     df = prepareData(df)
     # Drop Revenue and Costs because that would train the model to give us a non useful result
     dfPredictPrfitablity = df.copy()
@@ -126,11 +119,12 @@ if __name__ == "__main__":
     dfPredictCustomerSatisfaction["IsCustomerSatisfied"] = dfPredictCustomerSatisfaction["CustomerSatisfaction"] >= 3
     algo(dfPredictCustomerSatisfaction, "CustomerSatisfaction")
 
-    
 
-
-
-
-
-    
+if __name__ == "__main__":
+    path = Path("../data/data.sqlite")
+    if not path.exists():
+        # Prevent creating an empty db
+        raise Exception("Database does not exist")
+    con = sqlite3.connect(path)
+    predictProfitabilityAndCustomerSatisfactionBasedOnSQLQuery(con, "SELECT * FROM Pizza_Case WHERE Variant != 5")
 
